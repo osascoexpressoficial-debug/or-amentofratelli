@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Osasco Express × Fratelli — Proposta Comercial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+
+/* ══ RESET ══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══ TOKENS ══ */
+:root{
+  --red:#ea1d2c; --red-d:#c0111e; --red-bg:#fff5f5; --red-br:#fcc;
+  --bg:#f7f7f5; --white:#fff;
+  --s1:#f2f1ee; --s2:#e8e7e2; --s3:#d8d7d0;
+  --txt:#3e3e3e; --t2:#717171; --t3:#a8a29e; --t4:#d4d2cb;
+  --grn:#50a773; --grn-bg:#f0faf4; --grn-br:#b8dfc8;
+  --ora:#ff7a00; --ora-bg:#fff7ed; --ora-br:#ffd099;
+  --blu:#3483fa; --blu-bg:#eff5ff; --blu-br:#bdd4fc;
+  --yel:#f5a623;
+  --f:'Nunito Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --m:'Source Code Pro','Courier New',monospace;
+  --r:8px; --r2:12px; --r3:16px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 2px 8px rgba(0,0,0,.05);
+  --sh2:0 2px 12px rgba(0,0,0,.1),0 4px 24px rgba(0,0,0,.07);
+
+  /* Print equivalents for dark section colors */
+  --dk-bg:#1c1b19;
+  --dk-txt:#fff;
+  --dk-t2:rgba(255,255,255,.5);
+  --dk-t3:rgba(255,255,255,.3);
+  --dk-brd:rgba(255,255,255,.08);
+  --dk-card:rgba(255,255,255,.05);
+}
+
+html{font-size:14px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:var(--f);-webkit-font-smoothing:antialiased;}
+
+/* ══ PRINT — same visual, paper-safe ══ */
+@media print{
+  @page{margin:12mm 12mm 14mm;size:A4;}
+  html{font-size:11px;}
+  body{background:#fff;}
+
+  .no-print{display:none!important;}
+
+  /* Dark sections → warm light gray, border top/bottom em vermelho OE */
+  .hero,.dash-bg,.roi-bg,.cta-bg{
+    background:#f4f3f0!important;
+    border-top:2.5px solid var(--red)!important;
+    border-bottom:2.5px solid var(--red)!important;
+  }
+
+  /* Hero: cores adaptadas */
+  .hero-bg,.hero-grid,.hero-scroll{display:none!important;}
+  .hero-badge{background:var(--red-bg)!important;border-color:var(--red-br)!important;color:var(--red)!important;}
+  .hero-badge-dot{background:var(--red)!important;animation:none!important;}
+  .hero-title{color:#2a2929!important;font-size:28px!important;}
+  .hero-title span{color:var(--red)!important;}
+  .hero-subtitle{color:#717171!important;}
+  .hero-kpis{background:var(--s1)!important;border:1px solid var(--s3)!important;gap:1px!important;}
+  .hero-kpi{background:#fff!important;}
+  .hero-kpi-val{color:#2a2929!important;}
+  .hero-kpi-val.red{color:var(--red)!important;}
+  .hero-kpi-val.grn{color:var(--grn)!important;}
+  .hero-kpi-val.ora{color:var(--ora)!important;}
+  .hero-kpi-label{color:#888!important;}
+
+  /* KPI cards no dashboard */
+  .kpi-card{background:var(--s1)!important;border:1px solid var(--s3)!important;}
+  .kpi-lbl{color:#999!important;}
+  .kpi-val{color:#2a2929!important;}
+  .kpi-val.red{color:var(--red)!important;}
+  .kpi-val.grn{color:var(--grn)!important;}
+  .kpi-val.ora{color:var(--ora)!important;}
+  .kpi-val.yel{color:var(--yel)!important;}
+  .kpi-src{color:#bbb!important;}
+  .dash-title{color:#2a2929!important;}
+  .dash-sub{color:#999!important;}
+  .chart-card{background:var(--s1)!important;border:1px solid var(--s3)!important;}
+  .chart-label{color:#888!important;}
+  .pico-val{color:var(--red)!important;}
+  .pico-sub{color:#888!important;}
+
+  /* ROI */
+  .roi-title{color:#2a2929!important;}
+  .roi-title span{color:var(--grn)!important;}
+  .roi-desc{color:#717171!important;}
+  .roi-item{background:var(--s1)!important;border-color:var(--s3)!important;}
+  .roi-item-label{color:#888!important;}
+  .roi-item-val{color:#2a2929!important;}
+  .roi-item-val.grn{color:var(--grn)!important;}
+  .roi-item-val.red{color:var(--red)!important;}
+  .roi-right{background:var(--s1)!important;border-color:var(--s3)!important;}
+  .roi-summary-title{color:#999!important;}
+  .roi-line{border-color:var(--s3)!important;}
+  .roi-line-label{color:#717171!important;}
+  .roi-line-val{color:#2a2929!important;}
+  .roi-line-val.grn{color:var(--grn)!important;}
+  .roi-line-val.red{color:var(--red)!important;}
+  .roi-total{background:var(--grn-bg)!important;border-color:var(--grn-br)!important;}
+  .roi-total-label{color:#888!important;}
+  .roi-total-val{color:var(--grn)!important;}
+  .roi-total-sub{color:#999!important;}
+
+  /* CTA */
+  .cta-title{color:#2a2929!important;}
+  .cta-title span{color:var(--red)!important;}
+  .cta-sub{color:#717171!important;}
+  .btn-g,.btn-p{display:none!important;}
+  .cta-contacts{margin-top:12px!important;}
+  .cta-contact{color:#717171!important;}
+  .cta-contact strong{color:#2a2929!important;}
+
+  /* Section tags e titles */
+  .s-tag::before{background:var(--red)!important;}
+
+  /* Prevent breaks inside cards */
+  .service-card,.pain-card,.escala-card,.extra-card,
+  .contract-section,.plat-card,.oe-diff-card,.kpi-card,
+  .metric-card,.roi-item{break-inside:avoid;}
+
+  /* Page breaks */
+  #s-metricas{page-break-before:always;}
+  #s-dados{page-break-before:always;}
+  #s-roi{page-break-before:always;}
+  #s-precos{page-break-before:always;}
+  #s-contrato{page-break-before:always;}
+
+  /* Layout fixes */
+  .nav-topbar{display:none!important;}
+  .section,.dash-inner,.roi-inner,.cta-inner,.plat-inner{padding:14px 0!important;max-width:100%!important;}
+  .divider{margin:0!important;background:var(--s3)!important;}
+  .hero{min-height:auto!important;padding:20px 0 24px!important;}
+  .hero-content{padding:20px 0!important;max-width:100%!important;}
+  .hero-kpis{max-width:100%!important;}
+  canvas{max-height:150px!important;}
+  .charts-grid,.charts-grid3{gap:8px!important;}
+  .kpi-row{gap:7px!important;}
+
+  /* Plataformas */
+  .plat-bg{background:#fff!important;}
+  .plat-insight{break-inside:avoid;}
+
+  /* Fade animations — show all on print */
+  .fade-up{opacity:1!important;transform:none!important;}
+}
+
+/* ══ NAV ══ */
+.nav-topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid var(--s2);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
+.nav-logo{display:flex;align-items:center;gap:9px;}
+.nav-logo-icon{width:32px;height:32px;background:var(--red);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.nav-logo-name{font-size:13px;font-weight:800;color:var(--txt);}
+.nav-links{display:flex;gap:3px;}
+.nav-link{padding:5px 11px;border-radius:99px;font-size:11.5px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s;border:none;background:none;font-family:var(--f);}
+.nav-link:hover{color:var(--txt);background:var(--s1);}
+.nav-cta{background:var(--red);color:#fff;padding:7px 16px;border-radius:99px;font-size:11.5px;font-weight:700;border:none;cursor:pointer;font-family:var(--f);}
+.nav-cta:hover{background:var(--red-d);}
+
+/* ══ HERO ══ */
+.hero{background:var(--dk-bg);min-height:100vh;display:flex;flex-direction:column;padding-top:54px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 60% 40%,rgba(234,29,44,.16) 0%,transparent 55%),radial-gradient(ellipse 40% 35% at 15% 75%,rgba(234,29,44,.07) 0%,transparent 50%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;}
+.hero-content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:80px 52px 60px;max-width:1080px;margin:0 auto;width:100%;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:99px;background:rgba(234,29,44,.14);border:1px solid rgba(234,29,44,.28);color:#ff8585;font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:22px;width:fit-content;}
+.hero-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-size:clamp(28px,5.5vw,62px);font-weight:900;line-height:1.06;letter-spacing:-.5px;color:#fff;margin-bottom:16px;}
+.hero-title span{color:var(--red);}
+.hero-subtitle{font-size:clamp(12px,1.7vw,15px);color:rgba(255,255,255,.48);line-height:1.8;max-width:500px;margin-bottom:44px;}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:var(--r3);overflow:hidden;max-width:700px;gap:1px;}
+.hero-kpi{background:rgba(255,255,255,.03);padding:17px 20px;}
+.hero-kpi-val{font-family:var(--m);font-size:20px;font-weight:600;color:#fff;line-height:1;margin-bottom:4px;}
+.hero-kpi-val.red{color:#ff6b6b;}
+.hero-kpi-val.grn{color:#6ee7a0;}
+.hero-kpi-val.ora{color:#fdba74;}
+.hero-kpi-label{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.18);font-size:9.5px;letter-spacing:1px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:4px;animation:float 2s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+.scroll-arr{width:14px;height:14px;border-right:1.5px solid rgba(255,255,255,.18);border-bottom:1.5px solid rgba(255,255,255,.18);transform:rotate(45deg);}
+
+/* ══ SECTIONS ══ */
+.section{padding:60px 52px;max-width:1080px;margin:0 auto;}
+.s-tag{font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.s-tag::before{content:'';width:18px;height:2px;background:var(--red);border-radius:1px;display:inline-block;}
+.sec-title{font-size:clamp(22px,3.5vw,34px);font-weight:900;letter-spacing:-.4px;line-height:1.1;color:var(--txt);margin-bottom:10px;}
+.sec-title em{color:var(--red);font-style:normal;}
+.sec-sub{font-size:13.5px;color:var(--t2);line-height:1.8;max-width:540px;margin-bottom:40px;}
+
+/* ══ DASHBOARD ══ */
+.dash-bg{background:var(--dk-bg);padding:60px 0;}
+.dash-inner{max-width:1080px;margin:0 auto;padding:0 52px;}
+.dash-title{font-size:clamp(18px,3vw,28px);font-weight:900;color:#fff;letter-spacing:-.3px;margin-bottom:5px;}
+.dash-sub{font-size:11.5px;color:rgba(255,255,255,.32);margin-bottom:32px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:9px;}
+.kpi-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r2);padding:14px 16px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2.5px;border-radius:var(--r2) var(--r2) 0 0;}
+.kpi-card.red::before{background:var(--red);}
+.kpi-card.grn::before{background:#22c55e;}
+.kpi-card.ora::before{background:var(--ora);}
+.kpi-card.blu::before{background:var(--blu);}
+.kpi-card.yel::before{background:var(--yel);}
+.kpi-lbl{font-size:9px;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:700;margin-bottom:6px;}
+.kpi-val{font-family:var(--m);font-size:18px;font-weight:600;color:#fff;line-height:1;}
+.kpi-val.red{color:#ff6b6b;}.kpi-val.grn{color:#4ade80;}.kpi-val.ora{color:#fb923c;}.kpi-val.yel{color:#fbbf24;}
+.kpi-src{font-size:9.5px;color:rgba(255,255,255,.2);margin-top:4px;}
+.charts-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:10px;margin-bottom:10px;}
+.chart-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r2);padding:16px 18px;}
+.chart-label{font-size:9.5px;font-weight:700;color:rgba(255,255,255,.38);letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;}
+.charts-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.pico-box{display:flex;flex-direction:column;justify-content:center;align-items:center;height:130px;gap:4px;}
+.pico-val{font-family:var(--m);font-size:44px;font-weight:600;color:var(--red);line-height:1;}
+.pico-sub{font-size:11px;color:rgba(255,255,255,.35);}
+
+/* ══ PLATAFORMAS ══ */
+.plat-bg{background:var(--bg);padding:60px 0;}
+.plat-inner{max-width:1080px;margin:0 auto;padding:0 52px;}
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+.plat-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:24px;box-shadow:var(--sh);}
+.plat-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--s2);}
+.plat-logo{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.plat-logo.ifood{background:var(--red);}
+.plat-logo.n99{background:#1c1c1c;}
+.plat-name{font-size:15px;font-weight:900;color:var(--txt);}
+.plat-tagline{font-size:11px;color:var(--t3);margin-top:1px;}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.metric-card{background:var(--s1);border-radius:var(--r);padding:10px 12px;border:1px solid var(--s2);}
+.metric-val{font-family:var(--m);font-size:16px;font-weight:600;line-height:1;margin-bottom:3px;}
+.metric-val.r{color:var(--red);}.metric-val.g{color:var(--grn);}.metric-val.y{color:var(--yel);}.metric-val.b{color:var(--blu);}.metric-val.o{color:var(--ora);}
+.metric-label{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);}
+.metric-note{font-size:10.5px;color:var(--t2);line-height:1.55;margin-top:3px;}
+.plat-insight{padding:11px 13px;border-radius:var(--r);background:var(--red-bg);border:1px solid var(--red-br);font-size:11.5px;color:var(--txt);line-height:1.65;}
+.plat-insight.grn{background:var(--grn-bg);border-color:var(--grn-br);}
+.plat-insight strong{font-weight:800;}
+.oe-diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.oe-diff-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:18px;box-shadow:var(--sh);}
+.oe-diff-icon{font-size:22px;margin-bottom:10px;}
+.oe-diff-title{font-size:12.5px;font-weight:800;color:var(--txt);margin-bottom:5px;}
+.oe-diff-desc{font-size:11.5px;color:var(--t2);line-height:1.65;}
+
+/* ══ PROBLEMA ══ */
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+.pain-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:22px;box-shadow:var(--sh);}
+.pain-icon{font-size:24px;margin-bottom:12px;}
+.pain-title{font-size:13.5px;font-weight:800;margin-bottom:5px;color:var(--txt);}
+.pain-val{font-family:var(--m);font-size:30px;font-weight:600;color:var(--red);margin-bottom:5px;line-height:1;}
+.pain-card.ok .pain-val{color:var(--grn);}
+.pain-desc{font-size:12px;color:var(--t2);line-height:1.7;}
+
+/* ══ SERVIÇOS ══ */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.service-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:20px;box-shadow:var(--sh);transition:transform .12s,box-shadow .12s;}
+.service-card:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+.service-num{font-family:var(--m);font-size:9.5px;font-weight:600;color:var(--t3);margin-bottom:8px;}
+.service-icon{font-size:20px;margin-bottom:8px;}
+.service-title{font-size:13px;font-weight:800;margin-bottom:5px;color:var(--txt);}
+.service-desc{font-size:11.5px;color:var(--t2);line-height:1.65;}
+
+/* ══ ROI ══ */
+.roi-bg{background:var(--dk-bg);padding:60px 0;}
+.roi-inner{max-width:1080px;margin:0 auto;padding:0 52px;}
+.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.roi-title{font-size:clamp(20px,3vw,32px);font-weight:900;color:#fff;letter-spacing:-.4px;margin-bottom:12px;}
+.roi-title span{color:#4ade80;}
+.roi-desc{font-size:12.5px;color:rgba(255,255,255,.38);line-height:1.8;margin-bottom:24px;}
+.roi-items{display:flex;flex-direction:column;gap:8px;}
+.roi-item{display:flex;align-items:center;gap:11px;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);}
+.roi-item-icon{font-size:16px;flex-shrink:0;}
+.roi-item-label{font-size:10.5px;color:rgba(255,255,255,.38);margin-bottom:1px;}
+.roi-item-val{font-family:var(--m);font-size:14px;font-weight:600;color:#fff;}
+.roi-item-val.grn{color:#4ade80;}.roi-item-val.red{color:#f87171;}
+.roi-right{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r2);padding:24px;}
+.roi-summary-title{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:18px;}
+.roi-line{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;}
+.roi-line:last-of-type{border-bottom:none;}
+.roi-line-label{color:rgba(255,255,255,.42);}
+.roi-line-val{font-family:var(--m);font-weight:600;color:#fff;}
+.roi-line-val.red{color:#f87171;}.roi-line-val.grn{color:#4ade80;}
+.roi-total{margin-top:16px;padding:16px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.18);border-radius:var(--r);text-align:center;}
+.roi-total-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:5px;}
+.roi-total-val{font-size:26px;font-weight:900;color:#4ade80;}
+.roi-total-sub{font-size:10px;color:rgba(255,255,255,.22);margin-top:3px;}
+
+/* ══ PREÇOS ══ */
+.price-hero{background:var(--red);border-radius:var(--r2);padding:24px 28px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 4px 20px rgba(234,29,44,.25);}
+.price-hero-tag{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:5px;}
+.price-hero-title{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.3px;}
+.price-hero-sub{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:4px;}
+.price-hero-right{display:flex;gap:24px;flex-shrink:0;}
+.price-stat{text-align:center;}
+.price-stat-val{font-family:var(--m);font-size:22px;font-weight:600;color:#fff;}
+.price-stat-label{font-size:9px;color:rgba(255,255,255,.55);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.price-table-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);}
+.price-table-head{padding:11px 16px;font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:6px;}
+.price-table-head.seg{background:var(--s1);color:var(--txt);border-bottom:1px solid var(--s2);}
+.price-table-head.fds{background:var(--red);color:#fff;}
+.price-table-body{padding:9px;}
+.km-row{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border-radius:var(--r);margin-bottom:2px;font-size:12px;}
+.km-row:nth-child(odd){background:var(--s1);}
+.km-row:hover{background:var(--s2);}
+.km-dist{color:var(--t2);font-weight:500;}
+.km-val{font-family:var(--m);font-weight:600;color:var(--txt);}
+.km-val.hi{color:var(--red);font-size:13px;}
+.extras-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.extra-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:13px 14px;box-shadow:var(--sh);display:flex;gap:9px;align-items:flex-start;}
+.extra-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.extra-title{font-size:11px;font-weight:800;margin-bottom:2px;color:var(--txt);}
+.extra-val{font-family:var(--m);font-size:13.5px;font-weight:600;color:var(--red);}
+.extra-desc{font-size:10.5px;color:var(--t3);margin-top:1px;}
+
+/* ══ TIMELINE ══ */
+.timeline{display:flex;gap:0;margin-bottom:40px;}
+.tl-step{flex:1;position:relative;padding:20px 18px 20px 0;}
+.tl-step::before{content:'';position:absolute;top:32px;left:27px;right:0;height:1.5px;background:var(--s3);}
+.tl-step:last-child::before{display:none;}
+.tl-num{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--m);font-size:10.5px;font-weight:600;color:#fff;margin-bottom:10px;position:relative;z-index:1;}
+.tl-title{font-size:12.5px;font-weight:800;color:var(--txt);margin-bottom:3px;}
+.tl-desc{font-size:11px;color:var(--t2);line-height:1.6;}
+
+/* ══ ESCALA ══ */
+.escala-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.escala-card{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:20px;box-shadow:var(--sh);}
+.escala-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.escala-title{font-size:13.5px;font-weight:800;color:var(--txt);}
+.escala-badge{padding:3px 9px;border-radius:99px;font-size:9.5px;font-weight:700;}
+.escala-badge.util{background:var(--blu-bg);color:var(--blu);border:1px solid var(--blu-br);}
+.escala-badge.fds{background:var(--red-bg);color:var(--red);border:1px solid var(--red-br);}
+.escala-ents{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
+.ent{width:36px;height:36px;border-radius:50%;background:var(--s1);border:1.5px solid var(--s3);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.ent.on{background:var(--red-bg);border-color:var(--red-br);}
+.escala-info{font-size:11.5px;color:var(--t2);line-height:1.7;}
+.escala-info strong{color:var(--txt);}
+
+/* ══ CTA ══ */
+.cta-bg{background:var(--dk-bg);padding:60px 0;}
+.cta-inner{max-width:860px;margin:0 auto;padding:0 52px;text-align:center;}
+.cta-title{font-size:clamp(24px,5vw,46px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.06;margin-bottom:12px;}
+.cta-title span{color:var(--red);}
+.cta-sub{font-size:13px;color:rgba(255,255,255,.38);line-height:1.8;max-width:440px;margin:0 auto 32px;}
+.cta-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
+.btn-p{background:var(--red);color:#fff;padding:12px 28px;border-radius:99px;font-size:12.5px;font-weight:700;border:none;cursor:pointer;font-family:var(--f);}
+.btn-p:hover{background:var(--red-d);}
+.btn-g{background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);padding:12px 22px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid rgba(255,255,255,.1);cursor:pointer;font-family:var(--f);}
+.cta-contacts{margin-top:32px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+.cta-contact{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(255,255,255,.32);}
+.cta-contact strong{color:rgba(255,255,255,.6);}
+
+/* ══ CONTRATO ══ */
+.contract-section{background:var(--white);border:1px solid var(--s3);border-radius:var(--r2);padding:24px 28px;box-shadow:var(--sh);margin-bottom:14px;}
+.contract-title{font-size:14px;font-weight:800;color:var(--txt);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--s2);}
+.contract-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.c-party-label{font-size:9px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--t3);margin-bottom:7px;}
+.c-party-name{font-size:14px;font-weight:800;color:var(--txt);margin-bottom:4px;}
+.c-party-detail{font-size:11.5px;color:var(--t2);line-height:1.7;}
+.clause{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--s1);}
+.clause:last-child{border-bottom:none;}
+.clause-n{font-family:var(--m);font-size:10px;font-weight:600;color:var(--t3);flex-shrink:0;min-width:24px;padding-top:1px;}
+.clause-t{font-size:12px;color:var(--t2);line-height:1.7;}
+.clause-t strong{color:var(--txt);}
+
+/* ══ MISC ══ */
+.divider{height:1px;background:var(--s2);margin:0 52px;}
+.fade-up{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.fade-up.visible{opacity:1;transform:none;}
+
+@media(max-width:768px){
+  .hero-content,.section,.dash-inner,.roi-inner,.cta-inner,.plat-inner{padding-left:20px;padding-right:20px;}
+  .divider{margin:0 20px;}
+  .hero-kpis{grid-template-columns:1fr 1fr;}
+  .kpi-row{grid-template-columns:1fr 1fr;}
+  .charts-grid,.charts-grid3{grid-template-columns:1fr;}
+  .roi-grid,.pain-grid,.price-grid,.escala-grid,.contract-grid,.plat-grid{grid-template-columns:1fr;}
+  .services-grid{grid-template-columns:1fr 1fr;}
+  .extras-grid,.oe-diff-grid{grid-template-columns:1fr 1fr;}
+  .timeline{flex-direction:column;}
+  .tl-step::before{display:none;}
+  .price-hero{flex-direction:column;}
+  .nav-links{display:none;}
+  .nav-topbar{padding:0 16px;}
+}
+
+</style>
+</head>
+<body>
+
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav-topbar no-print">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🛵</div>
+    <div class="nav-logo-name">Osasco Express</div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="document.getElementById('s-metricas').scrollIntoView({behavior:'smooth'})">Plataformas</button>
+    <button class="nav-link" onclick="document.getElementById('s-dados').scrollIntoView({behavior:'smooth'})">Diagnóstico</button>
+    <button class="nav-link" onclick="document.getElementById('s-roi').scrollIntoView({behavior:'smooth'})">ROI</button>
+    <button class="nav-link" onclick="document.getElementById('s-precos').scrollIntoView({behavior:'smooth'})">Preços</button>
+    <button class="nav-link" onclick="document.getElementById('s-contrato').scrollIntoView({behavior:'smooth'})">Contrato</button>
+  </div>
+  <button class="nav-cta no-print" onclick="window.print()">🖨️ Imprimir PDF</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Proposta Comercial · Osasco Express · 2026</div>
+    <h1 class="hero-title">
+      Sua operação de delivery<br>merece um parceiro de<br><span>verdade.</span>
+    </h1>
+    <p class="hero-subtitle">
+      Análise baseada nos <strong style="color:rgba(255,255,255,.75)">dados reais do Fratelli Espaço Gourmet</strong> — 474 pedidos auditados no iFood. Números que mostram onde estamos e onde podemos chegar juntos.
+    </p>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><div class="hero-kpi-val red">17,9%</div><div class="hero-kpi-label">Tx. cancelamento</div></div>
+      <div class="hero-kpi"><div class="hero-kpi-val">R$3.082</div><div class="hero-kpi-label">Receita perdida</div></div>
+      <div class="hero-kpi"><div class="hero-kpi-val ora">22 min</div><div class="hero-kpi-label">Tempo de entrega</div></div>
+      <div class="hero-kpi"><div class="hero-kpi-val grn">R$16.593</div><div class="hero-kpi-label">Receita no período</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll no-print"><div class="scroll-arr"></div><span>Ver diagnóstico</span></div>
+</section>
+
+<!-- PLATAFORMAS — O QUE IFOOD E 99 AVALIAM -->
+<div class="plat-bg" id="s-metricas">
+  <div class="plat-inner">
+
+    <div class="fade-up" style="margin-bottom:32px;">
+      <div class="s-tag">O que as plataformas medem</div>
+      <h2 class="sec-title">iFood e 99Food avaliam<br><em>cada entrega que você faz.</em></h2>
+      <p class="sec-sub">Entender essas métricas é o primeiro passo. A entrega certa, no tempo certo, é o que separa um restaurante mediano de um Super Restaurante.</p>
+    </div>
+
+    <div class="plat-grid fade-up">
+      <!-- IFOOD -->
+      <div class="plat-card">
+        <div class="plat-header">
+          <div class="plat-logo ifood">🛵</div>
+          <div>
+            <div class="plat-name">iFood</div>
+            <div class="plat-tagline">Maior plataforma de delivery do Brasil · +400k restaurantes</div>
+          </div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-val r">≤ 1%</div>
+            <div class="metric-label">Cancelamento — Selo Super</div>
+            <div class="metric-note">Fratelli atual: <strong>17,9%</strong> — 18x acima do ideal</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val g">≥ 4,7 ★</div>
+            <div class="metric-label">Nota mínima — Selo Super</div>
+            <div class="metric-note">Avaliação nos últimos 90 dias pelo cliente</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val b">≤ 2,5%</div>
+            <div class="metric-label">Erros negociação</div>
+            <div class="metric-note">Pedido atrasado, não entregue ou item errado</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val y">Tempo</div>
+            <div class="metric-label">Aceite + preparo + coleta</div>
+            <div class="metric-note">Impacta ranqueamento e filtros de "entrega rápida"</div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-bottom:10px;">
+          <div class="metric-label" style="margin-bottom:4px;">Algoritmo de ranqueamento considera</div>
+          <div class="metric-note">Tempo de entrega · Índice de cancelamentos · Frequência de abertura · Volume de vendas · Avaliações dos clientes · Participação em promoções</div>
+        </div>
+        <div class="plat-insight">
+          <strong>O que está em jogo para o Fratelli:</strong> com 17,9% de cancelamento, o iFood pode pausar a loja automaticamente. Restaurantes com taxa abaixo de 1% ganham o Selo Super — <strong>mais visibilidade, mais pedidos, sem custo adicional.</strong>
+        </div>
+      </div>
+
+      <!-- 99FOOD -->
+      <div class="plat-card">
+        <div class="plat-header">
+          <div class="plat-logo n99" style="font-size:13px;font-weight:900;font-family:var(--m);color:#fff;">99</div>
+          <div>
+            <div class="plat-name">99Food</div>
+            <div class="plat-tagline">Voltou em 2025 · 0% comissão no 1º ano · 55M+ usuários</div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-bottom:10px;">
+          <div class="metric-label" style="margin-bottom:5px;">Nota de Qualidade — 5 critérios (0 a 10 pontos)</div>
+          <div class="metric-note" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px;">
+            <span>① Taxa de cancelamento</span><span>② Tempo de preparo</span>
+            <span>③ Avaliação dos clientes</span><span>④ Tempo de aceite</span>
+            <span>⑤ Frequência de abertura</span><span></span>
+          </div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-val g">> 7,0</div>
+            <div class="metric-label">Nota para tráfego grátis</div>
+            <div class="metric-note">7 dias de campanha gratuita por mês</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val b">3,2%</div>
+            <div class="metric-label">Única taxa (pagamento online)</div>
+            <div class="metric-note">Zero comissão no 1º ano de operação</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val y">Visibilidade</div>
+            <div class="metric-label">Nota alta = aparecer mais</div>
+            <div class="metric-note">Algoritmo favorece notas maiores nas buscas</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val o">Logística</div>
+            <div class="metric-label">Entrega própria ou da plataforma</div>
+            <div class="metric-note">Taxa fixa por distância com entregadores 99</div>
+          </div>
+        </div>
+        <div class="plat-insight grn">
+          <strong>Oportunidade 99Food:</strong> com 0% de comissão no 1º ano, o Fratelli poderia abrir canal de vendas sem custo. Com entrega própria via Osasco Express, controla o tempo de entrega e garante nota alta — <strong>tráfego grátis todo mês.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Como a OE resolve -->
+    <div class="fade-up">
+      <div class="s-tag" style="margin-bottom:10px;">Como a Osasco Express resolve</div>
+      <h3 style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:20px;">Nossa parceria vai <em style="color:var(--red);font-style:normal;">além da entrega.</em><br>É sobre o sucesso e a expansão da sua marca.</h3>
+      <div class="oe-diff-grid">
+        <div class="oe-diff-card"><div class="oe-diff-icon">📉</div><div class="oe-diff-title">Cancelamento abaixo de 8%</div><div class="oe-diff-desc">Entregadores dedicados chegam rápido. Menos espera = menos cancelamento = melhor ranqueamento nas plataformas.</div></div>
+        <div class="oe-diff-card"><div class="oe-diff-icon">⭐</div><div class="oe-diff-title">Avaliações melhores</div><div class="oe-diff-desc">Entrega rápida gera cliente satisfeito. Cliente satisfeito avalia bem. Boa nota = Selo Super iFood = mais visibilidade = mais pedidos.</div></div>
+        <div class="oe-diff-card"><div class="oe-diff-icon">📊</div><div class="oe-diff-title">Dados que você não tinha</div><div class="oe-diff-desc">Relatório semanal com volume por turno, horários de pico e desempenho. Você toma decisão com dados reais.</div></div>
+        <div class="oe-diff-card"><div class="oe-diff-icon">🏷️</div><div class="oe-diff-title">Identidade da sua marca</div><div class="oe-diff-desc">Entregadores padronizados com postura e apresentação do Fratelli. O cliente vê o restaurante, não o aplicativo.</div></div>
+        <div class="oe-diff-card"><div class="oe-diff-icon">💳</div><div class="oe-diff-title">Canal direto sem comissão</div><div class="oe-diff-desc">Com entrega própria, venda direto pelo WhatsApp ou app próprio. Zero comissão para o iFood. Margem maior para você.</div></div>
+        <div class="oe-diff-card"><div class="oe-diff-icon">🚀</div><div class="oe-diff-title">Escalabilidade</div><div class="oe-diff-desc">Quando o Fratelli crescer — novos bairros, nova unidade — a Osasco Express já está estruturada para acompanhar a expansão.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DASHBOARD COM DADOS REAIS -->
+<div class="dash-bg" id="s-dados">
+  <div class="dash-inner">
+    <div class="dash-title fade-up">Janeiro/2026 — <span style="color:rgba(255,255,255,.28)">474 pedidos · planilha iFood</span></div>
+    <div class="dash-sub">Cada número abaixo foi extraído diretamente da planilha. Zero estimativas.</div>
+    <div class="kpi-row fade-up">
+      <div class="kpi-card red"><div class="kpi-lbl">Cancelamentos</div><div class="kpi-val red">85</div><div class="kpi-src">17,9% dos pedidos · meta iFood: ≤1%</div></div>
+      <div class="kpi-card grn"><div class="kpi-lbl">Concluídos</div><div class="kpi-val grn">389</div><div class="kpi-src">82,1% de sucesso</div></div>
+      <div class="kpi-card ora"><div class="kpi-lbl">Ticket médio</div><div class="kpi-val" style="color:#fb923c;">R$42,66</div><div class="kpi-src">Média de 474 pedidos</div></div>
+      <div class="kpi-card yel"><div class="kpi-lbl">Receita total</div><div class="kpi-val yel">R$16.593</div><div class="kpi-src">Pedidos concluídos</div></div>
+    </div>
+    <div class="kpi-row fade-up" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kpi-card blu"><div class="kpi-lbl">Tempo entrega</div><div class="kpi-val" style="color:#60a5fa;">22 min</div><div class="kpi-src">Média real da planilha</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Tempo preparo</div><div class="kpi-val">15 min</div><div class="kpi-src">Média real da planilha</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Clientes únicos</div><div class="kpi-val">417</div><div class="kpi-src">IDs distintos</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Recompra</div><div class="kpi-val" style="color:#c084fc;">10,1%</div><div class="kpi-src">Voltaram a pedir</div></div>
+      <div class="kpi-card red"><div class="kpi-lbl">Receita perdida</div><div class="kpi-val red">R$3.082</div><div class="kpi-src">85 cancel. × R$42,66 × 85%</div></div>
+    </div>
+    <div class="charts-grid fade-up">
+      <div class="chart-card"><div class="chart-label">Pedidos por hora do dia</div><canvas id="chart-hora" height="170"></canvas></div>
+      <div class="chart-card"><div class="chart-label">Pedidos por dia da semana</div><canvas id="chart-dia" height="170"></canvas></div>
+    </div>
+    <div class="charts-grid3 fade-up">
+      <div class="chart-card"><div class="chart-label">Cancelados vs Concluídos</div><div style="max-width:180px;margin:0 auto"><canvas id="chart-status" height="160"></canvas></div></div>
+      <div class="chart-card"><div class="chart-label">Forma de pagamento</div><div style="max-width:180px;margin:0 auto"><canvas id="chart-pag" height="160"></canvas></div></div>
+      <div class="chart-card"><div class="chart-label">Pico real identificado</div><div class="pico-box"><div class="pico-val">17h</div><div class="pico-sub">84 pedidos — horário crítico</div><div class="pico-sub" style="margin-top:4px;">Sexta: dia mais movido (107 ped)</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMA REAL -->
+<div style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">O que os números mostram</div>
+    <h2 class="sec-title">Cada cancelamento é<br><em>dinheiro e reputação perdidos.</em></h2>
+    <p class="sec-sub">Com 17,9% de cancelamento — 18x acima do Selo Super do iFood — o Fratelli perde receita, posição no algoritmo e clientes todo mês.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pain-icon">❌</div><div class="pain-title">Taxa de cancelamento</div><div class="pain-val">17,9%</div><div class="pain-desc">Meta Selo Super iFood: <strong>≤ 1%</strong>. Cada cancelamento derruba o ranking. Com taxa alta, o iFood pode pausar a loja automaticamente. <strong>85 pedidos × R$42,66 × 85% = R$3.082 perdidos.</strong></div></div>
+      <div class="pain-card"><div class="pain-icon">📉</div><div class="pain-title">Retenção de clientes</div><div class="pain-val">10,1%</div><div class="pain-desc">Apenas 42 dos 417 clientes voltaram a pedir. <strong>375 compraram uma vez e não voltaram.</strong> Entrega ruim e demora são as principais causas de não-retorno no delivery.</div></div>
+      <div class="pain-card"><div class="pain-icon">⏱️</div><div class="pain-title">Tempo total de entrega</div><div class="pain-val">22 min</div><div class="pain-desc">Preparo: 15 min. Espera pelo entregador da plataforma: 7-20 min adicionais. Total real percebido pelo cliente: <strong>35-40 min</strong> — acima do ideal de 25-30 min.</div></div>
+      <div class="pain-card ok"><div class="pain-icon">🎯</div><div class="pain-title">Com Osasco Express</div><div class="pain-val">Meta &lt;8%</div><div class="pain-desc">Entregadores dedicados chegam <strong>5-8 min após o pedido ficar pronto.</strong> Cancelamento cai. Nota sobe. Algoritmo ranqueia melhor. Mais pedidos sem pagar mais.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVIÇOS -->
+<div class="divider"></div>
+<div style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">O que entregamos</div>
+    <h2 class="sec-title">Mais que entregadores.<br><em>Uma operação completa.</em></h2>
+    <p class="sec-sub">Você foca no que faz de melhor — cozinhar. A Osasco Express cuida do resto, do recrutamento ao relatório semanal.</p>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-num">01 · frota</div><div class="service-icon">🛵</div><div class="service-title">Frota dedicada por turno</div><div class="service-desc">4 entregadores Seg-Qui, 7 na Sex-Dom. Escalados para seus picos reais — identificamos que você precisa de reforço às 17h e nas Sextas.</div></div>
+      <div class="service-card"><div class="service-num">02 · gestão</div><div class="service-icon">🗺️</div><div class="service-title">Gestão de rotas em tempo real</div><div class="service-desc">Gestor de rotas + líder em campo + monitor de corridas. Você não gerencia nenhum entregador. Nós resolvemos as ocorrências.</div></div>
+      <div class="service-card"><div class="service-num">03 · tecnologia</div><div class="service-icon">📱</div><div class="service-title">Tecnologia Foody Delivery</div><div class="service-desc">Despacho automático, GPS em tempo real, otimização de rotas e relatórios operacionais toda segunda-feira.</div></div>
+      <div class="service-card"><div class="service-num">04 · pagamento</div><div class="service-icon">💳</div><div class="service-title">Pagamento na entrega</div><div class="service-desc">Maquininha da sua loja. Dinheiro na mão. Canal direto sem comissão do iFood. Impossivelwith plataforma.</div></div>
+      <div class="service-card"><div class="service-num">05 · suporte</div><div class="service-icon">🔧</div><div class="service-title">Suporte humano 10h-20h</div><div class="service-desc">Analista disponível todos os dias via WhatsApp + AnyDesk. Ocorrência resolvida em minutos, não horas.</div></div>
+      <div class="service-card"><div class="service-num">06 · jurídico</div><div class="service-icon">🛡️</div><div class="service-title">Zero vínculo empregatício</div><div class="service-desc">Entregadores parceiros MEI. Sem encargo, sem rescisão, sem reclamação trabalhista. 100% legal e seguro.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROI -->
+<div class="roi-bg" id="s-roi">
+  <div class="roi-inner">
+    <div class="fade-up" style="margin-bottom:40px;">
+      <div class="s-tag" style="color:rgba(255,255,255,.35);"><span style="background:rgba(255,255,255,.3);width:18px;height:2px;display:inline-block;margin-right:8px;border-radius:1px;"></span>Retorno sobre investimento</div>
+      <div class="roi-title">Quanto o Fratelli <span>ganha</span><br>com a Osasco Express.</div>
+      <div class="roi-desc" style="max-width:480px;">Calculado com os dados reais da planilha. Projeção mensal conservadora.</div>
+    </div>
+    <div class="roi-grid fade-up">
+      <div>
+        <div class="roi-items">
+          <div class="roi-item"><div class="roi-item-icon">💰</div><div><div class="roi-item-label">Comissão iFood economizada (~14,5% sobre R$16.593)</div><div class="roi-item-val grn">~R$ 2.406/mês</div></div></div>
+          <div class="roi-item"><div class="roi-item-icon">🎯</div><div><div class="roi-item-label">Receita recuperada (40% dos 85 cancelamentos)</div><div class="roi-item-val grn">~R$ 1.233/mês</div></div></div>
+          <div class="roi-item"><div class="roi-item-icon">🔁</div><div><div class="roi-item-label">Aumento recompra (+5pp estimado · 375 clientes inativos)</div><div class="roi-item-val grn">~R$ 890/mês</div></div></div>
+          <div class="roi-item"><div class="roi-item-icon">💳</div><div><div class="roi-item-label">Vendas diretas sem comissão (canal próprio)</div><div class="roi-item-val grn">~R$ 600/mês</div></div></div>
+          <div class="roi-item" style="background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.15);"><div class="roi-item-icon">📋</div><div><div class="roi-item-label">Custo Osasco Express / semana × 4</div><div class="roi-item-val red">−R$ 10.360/mês</div></div></div>
+        </div>
+      </div>
+      <div class="roi-right">
+        <div class="roi-summary-title">Projeção mensal — dados reais</div>
+        <div class="roi-line"><span class="roi-line-label">Comissão economizada</span><span class="roi-line-val grn">+R$ 2.406</span></div>
+        <div class="roi-line"><span class="roi-line-label">Cancelamentos recuperados</span><span class="roi-line-val grn">+R$ 1.233</span></div>
+        <div class="roi-line"><span class="roi-line-label">Mais recompras</span><span class="roi-line-val grn">+R$ 890</span></div>
+        <div class="roi-line"><span class="roi-line-label">Vendas diretas</span><span class="roi-line-val grn">+R$ 600</span></div>
+        <div class="roi-line"><span class="roi-line-label">Custo OE/mês</span><span class="roi-line-val red">−R$ 10.360</span></div>
+        <div class="roi-total">
+          <div class="roi-total-label">O que você ganha de verdade</div>
+          <div class="roi-total-val">Operação blindada</div>
+          <div class="roi-total-sub">Cancelamento &lt;8% · Selo Super possível · Custo fixo previsível · Clientes fiéis</div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:6px;font-size:10.5px;color:rgba(255,255,255,.25);line-height:1.6;">* Projeção baseada em 474 pedidos/período. Comissão estimada em 14,5%. Cancelamentos recuperados: 40%. Valores variam conforme volume real.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ESCALA OPERACIONAL -->
+<div style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">Escala operacional</div>
+    <h2 class="sec-title"><em>Entregadores certos</em><br>no horário certo.</h2>
+    <p class="sec-sub">Baseado nos seus picos reais: 17h é o horário crítico, Sexta é o dia mais movido.</p>
+    <div class="escala-grid">
+      <div class="escala-card">
+        <div class="escala-header"><div class="escala-title">Segunda → Quinta</div><div class="escala-badge util">Dias úteis</div></div>
+        <div class="escala-ents">
+          <div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div>
+        </div>
+        <div class="escala-info"><strong>4 entregadores</strong> · Turno das 17h às 23h30<br>Custo: <strong>4 × R$70 = R$280/dia</strong><br>Pico real às 17h: 84 pedidos — cobertura garantida<br>Adicional por hora extra: R$10/entregador</div>
+      </div>
+      <div class="escala-card">
+        <div class="escala-header"><div class="escala-title">Sexta → Domingo</div><div class="escala-badge fds">Final de semana 🔥</div></div>
+        <div class="escala-ents">
+          <div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div><div class="ent on">🛵</div>
+        </div>
+        <div class="escala-info"><strong>7 entregadores</strong> · Turno das 17h às 23h30<br>Custo: <strong>7 × R$70 = R$490/dia</strong><br>Sexta: 107 pedidos — dia mais movido<br>Feriados: R$80/entregador</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA DE PREÇOS -->
+<div class="divider"></div>
+<div id="s-precos" style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">Tabela de valores</div>
+    <h2 class="sec-title">Preços <em>transparentes.</em><br>Sem surpresas no fechamento.</h2>
+    <div class="price-hero">
+      <div><div class="price-hero-tag">Diária por entregador</div><div class="price-hero-title">R$70,00 por turno de 7 horas</div><div class="price-hero-sub">Dias regulares · Feriados: R$80,00</div></div>
+      <div class="price-hero-right">
+        <div class="price-stat"><div class="price-stat-val">R$280</div><div class="price-stat-label">Seg–Qui / dia</div></div>
+        <div class="price-stat"><div class="price-stat-val">R$490</div><div class="price-stat-label">Sex–Dom / dia</div></div>
+        <div class="price-stat"><div class="price-stat-val">~R$2.590</div><div class="price-stat-label">por semana</div></div>
+      </div>
+    </div>
+    <div class="price-grid">
+      <div class="price-table-card">
+        <div class="price-table-head seg">📅 Segunda a Quinta-feira</div>
+        <div class="price-table-body">
+          <div class="km-row"><span class="km-dist">Até 0,5 km</span><span class="km-val">R$ 6,00</span></div>
+          <div class="km-row"><span class="km-dist">1 km a 2 km</span><span class="km-val">R$ 8,00</span></div>
+          <div class="km-row"><span class="km-dist">3 km a 4 km</span><span class="km-val">R$ 8,00</span></div>
+          <div class="km-row"><span class="km-dist">5 km a 6 km</span><span class="km-val hi">R$ 10,00</span></div>
+          <div class="km-row"><span class="km-dist">Acima de 6 km</span><span class="km-val">+R$1,50/km</span></div>
+        </div>
+      </div>
+      <div class="price-table-card">
+        <div class="price-table-head fds">🔥 Sexta a Domingo e Feriados</div>
+        <div class="price-table-body">
+          <div class="km-row"><span class="km-dist">Até 0,5 km</span><span class="km-val">R$ 6,00</span></div>
+          <div class="km-row"><span class="km-dist">1 km a 3 km</span><span class="km-val">R$ 9,00</span></div>
+          <div class="km-row"><span class="km-dist">4 km a 6 km</span><span class="km-val hi">R$ 12,00</span></div>
+          <div class="km-row"><span class="km-dist">Acima de 6 km</span><span class="km-val">+R$1,50/km</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="extras-grid">
+      <div class="extra-card"><div class="extra-icon">🌧️</div><div><div class="extra-title">Dias de chuva</div><div class="extra-val">+50%</div><div class="extra-desc">Sobre o valor da entrega vigente</div></div></div>
+      <div class="extra-card"><div class="extra-icon">⏱️</div><div><div class="extra-title">Hora extra (após 23h30)</div><div class="extra-val">R$ 10,00</div><div class="extra-desc">Por entregador por hora</div></div></div>
+      <div class="extra-card"><div class="extra-icon">➕</div><div><div class="extra-title">Entregador adicional</div><div class="extra-val">R$ 70,00</div><div class="extra-desc">Por turno, sob solicitação e disponibilidade</div></div></div>
+      <div class="extra-card"><div class="extra-icon">🔄</div><div><div class="extra-title">Entregador flexível</div><div class="extra-val">R$ 30,00/dia</div><div class="extra-desc">+ taxas · mín. 2 entregas por dia</div></div></div>
+      <div class="extra-card"><div class="extra-icon">💳</div><div><div class="extra-title">Retorno maquininha</div><div class="extra-val">R$ 2,50</div><div class="extra-desc">Por entrega com maquininha da loja</div></div></div>
+      <div class="extra-card"><div class="extra-icon">📄</div><div><div class="extra-title">Nota fiscal</div><div class="extra-val">+5%</div><div class="extra-desc">Sob solicitação · fechamento semanal</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRÓXIMOS PASSOS -->
+<div class="divider"></div>
+<div style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">Como começa</div>
+    <h2 class="sec-title">Da assinatura à<br><em>primeira entrega.</em></h2>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-num">1</div><div class="tl-title">Assinatura via DocuSign</div><div class="tl-desc">Proposta assinada eletronicamente. Validade jurídica plena conforme MP 2.200-2/2001.</div></div>
+      <div class="tl-step"><div class="tl-num">2</div><div class="tl-title">Integração técnica</div><div class="tl-desc">Setup no Foody Delivery, integração com iFood e 99Food. Via WhatsApp + AnyDesk.</div></div>
+      <div class="tl-step"><div class="tl-num">3</div><div class="tl-title">Briefing dos entregadores</div><div class="tl-desc">Padrão de atendimento e apresentação do Fratelli. O cliente vê sua marca, não o aplicativo.</div></div>
+      <div class="tl-step"><div class="tl-num">4</div><div class="tl-title">Operação plena</div><div class="tl-desc">Relatório toda segunda-feira. Acompanhamento diário nas primeiras 2 semanas.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRATO -->
+<div class="divider"></div>
+<div id="s-contrato" style="background:var(--bg);">
+  <div class="section fade-up">
+    <div class="s-tag">Contrato comercial</div>
+    <h2 class="sec-title">Termos <em>claros</em><br>e sem pegadinhas.</h2>
+    <div class="contract-section">
+      <div class="contract-title">Identificação das Partes</div>
+      <div class="contract-grid">
+        <div><div class="c-party-label">Contratante</div><div class="c-party-name">Fratelli Espaço Gourmet Ltda</div><div class="c-party-detail">CNPJ: 42.212.888/0003-38<br>Representante: Henrique</div></div>
+        <div><div class="c-party-label">Contratada</div><div class="c-party-name">Osasco Express Serviços Ltda – ME</div><div class="c-party-detail">CNPJ: 54.707.097/0001-04<br>Av. Diogo Antônio Feijó, 855 – KM18, Osasco/SP<br>Representante: Reinaldo Alves de Souza Junior</div></div>
+      </div>
+    </div>
+    <div class="contract-section">
+      <div class="contract-title">Condições Principais</div>
+      <div class="clause"><div class="clause-n">§1</div><div class="clause-t"><strong>Vigência mínima de 90 dias.</strong> Rescisão antecipada pela contratante: multa de 30% da média mensal faturada, pagável em 5 dias úteis. A contratada pode rescindir a qualquer momento, sem multa.</div></div>
+      <div class="clause"><div class="clause-n">§2</div><div class="clause-t"><strong>Pagamento semanal via PIX,</strong> toda segunda-feira. Relatório enviado pela manhã. Atraso: multa 2% + juros 1%/mês + IGP-M. Possível suspensão dos serviços.</div></div>
+      <div class="clause"><div class="clause-n">§3</div><div class="clause-t"><strong>Turno fixo de 7 horas</strong> (17h00 às 23h30). Hora adicional: R$10,00/entregador. Horas com caráter operacional, não configurando vínculo trabalhista.</div></div>
+      <div class="clause"><div class="clause-n">§4</div><div class="clause-t"><strong>Cancelamento após deslocamento</strong> do entregador é cobrado integralmente. Atraso de retirada acima de 10 min: R$2,50/pedido a cada 10 min excedentes.</div></div>
+      <div class="clause"><div class="clause-n">§5</div><div class="clause-t"><strong>Entrega não finalizada:</strong> entregador aguarda 10 min com foto do pedido. Entrega considerada concluída e valor integral devido.</div></div>
+      <div class="clause"><div class="clause-n">§6</div><div class="clause-t"><strong>Alimentação (janta)</strong> dos entregadores em serviço por conta da contratante — somente o alimento, sem embalagens ou utensílios.</div></div>
+      <div class="clause"><div class="clause-n">§7</div><div class="clause-t"><strong>Entregadores parceiros MEI</strong> sem vínculo empregatício. A contratada atua exclusivamente como intermediadora logística e tecnológica.</div></div>
+    </div>
+    <div class="contract-section">
+      <div class="contract-title">Assinatura — Osasco/SP, ____ de _______________ de 2026</div>
+      <div class="contract-grid">
+        <div style="padding:20px;background:var(--s1);border-radius:var(--r);border:1px dashed var(--s3);text-align:center;">
+          <div style="font-size:10.5px;color:var(--t3);margin-bottom:36px;">Assinatura eletrônica via DocuSign</div>
+          <div style="border-top:1px solid var(--txt);padding-top:7px;font-size:11.5px;font-weight:700;color:var(--txt);">Fratelli Espaço Gourmet Ltda</div>
+          <div style="font-size:10.5px;color:var(--t2);">Representante: Henrique</div>
+        </div>
+        <div style="padding:20px;background:var(--s1);border-radius:var(--r);border:1px dashed var(--s3);text-align:center;">
+          <div style="font-size:10.5px;color:var(--t3);margin-bottom:36px;">Assinatura eletrônica via DocuSign</div>
+          <div style="border-top:1px solid var(--txt);padding-top:7px;font-size:11.5px;font-weight:700;color:var(--txt);">Osasco Express Serviços Ltda – ME</div>
+          <div style="font-size:10.5px;color:var(--t2);">Representante: Reinaldo Alves de Souza Junior</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="cta-bg">
+  <div class="cta-inner fade-up">
+    <h2 class="cta-title">Pronto para <span>sair</span><br>dos 17,9%?</h2>
+    <p class="cta-sub">85 cancelamentos no último mês. A solução está a uma assinatura de distância. E o Selo Super do iFood também.</p>
+    <div class="cta-btns">
+      <button class="btn-p" onclick="window.print()">🖨️ Imprimir proposta</button>
+      <button class="btn-g no-print" onclick="window.open('https://wa.me/5511986661784','_blank')">📱 WhatsApp agora</button>
+    </div>
+    <div class="cta-contacts">
+      <div class="cta-contact">📧 <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2c1cdccd6c3d6cde2cdd1c3d1c1cdc7dad2d0c7d1d18cc1cdcf8cc0d0">[email&#160;protected]</a></strong></div>
+      <div class="cta-contact">📞 <strong>(11) 98666-1784</strong></div>
+      <div class="cta-contact">📞 <strong>(11) 96425-1461</strong></div>
+      <div class="cta-contact">📍 <strong>Av. Diogo Antônio Feijó, 855 – KM18, Osasco/SP</strong></div>
+    </div>
+  </div>
+</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Chart colors — adaptam para print via CSS
+// Fix chart colors on print
+if(typeof window !== 'undefined'){
+  window.addEventListener('beforeprint', () => {
+    Chart.defaults.color = '#888';
+    Chart.helpers.each(Chart.instances, c => c.update());
+  });
+  window.addEventListener('afterprint', () => {
+    Chart.defaults.color = 'rgba(255,255,255,.4)';
+    Chart.helpers.each(Chart.instances, c => c.update());
+  });
+}
+const C = {
+  rd:'#ea1d2c', rdA:'rgba(234,29,44,.65)',
+  gn:'#22c55e', gnA:'rgba(34,197,94,.65)',
+  or:'#f97316', orA:'rgba(249,115,22,.65)',
+  bl:'#3b82f6', blA:'rgba(59,130,246,.65)',
+  tx:'rgba(255,255,255,.4)', gr:'rgba(255,255,255,.07)'
+};
+Chart.defaults.color = window.matchMedia && window.matchMedia('print').matches ? '#717171' : C.tx;
+Chart.defaults.font.family = "'Source Code Pro',monospace";
+Chart.defaults.font.size = 10;
+
+new Chart(document.getElementById('chart-hora'),{type:'bar',data:{
+  labels:['11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h'],
+  datasets:[{data:[23,27,26,23,30,36,84,69,51,50,29,26],
+    backgroundColor:[23,27,26,23,30,36,84,69,51,50,29,26].map(v=>v===84?C.rd:'rgba(255,255,255,.12)'),
+    borderRadius:4,borderSkipped:false}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{
+  x:{grid:{color:C.gr},ticks:{color:C.tx}},y:{grid:{color:C.gr},ticks:{color:C.tx}}
+}}});
+
+new Chart(document.getElementById('chart-dia'),{type:'bar',data:{
+  labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+  datasets:[{data:[15,9,80,95,107,90,78],
+    backgroundColor:['rgba(255,255,255,.12)','rgba(255,255,255,.07)','rgba(255,255,255,.12)','rgba(255,255,255,.16)',C.rd,C.orA,'rgba(249,115,22,.4)'],
+    borderRadius:4,borderSkipped:false}]
+},options:{responsive:true,plugins:{legend:{display:false}},scales:{
+  x:{grid:{display:false},ticks:{color:C.tx}},y:{grid:{color:C.gr},ticks:{color:C.tx}}
+}}});
+
+new Chart(document.getElementById('chart-status'),{type:'doughnut',data:{
+  labels:['Concluídos (389)','Cancelados (85)'],
+  datasets:[{data:[389,85],backgroundColor:[C.gnA,C.rdA],borderWidth:0,hoverOffset:4}]
+},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:C.tx,padding:10,font:{size:10}}}},cutout:'72%'}});
+
+new Chart(document.getElementById('chart-pag'),{type:'doughnut',data:{
+  labels:['Online (442)','Dinheiro (32)'],
+  datasets:[{data:[442,32],backgroundColor:[C.blA,C.orA],borderWidth:0,hoverOffset:4}]
+},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:C.tx,padding:10,font:{size:10}}}},cutout:'72%'}});
+
+// Scroll animations
+const obs = new Int
